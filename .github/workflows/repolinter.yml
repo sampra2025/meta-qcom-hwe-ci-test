@@ -9,8 +9,8 @@ on:
 
 jobs:
   repolinter:
-    if: github.repository == 'qualcomm-linux/meta-qcom-hwe'
-    runs-on: ubuntu-latest
+    if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
+    runs-on: codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
