@@ -15,9 +15,6 @@ jobs:
       - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
       
     steps:
-      - name: PreBuild Setup
-        run: pip3 install kas
-      
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
