@@ -11,7 +11,9 @@ env:
 jobs:
   kas-lock:
     if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
-    runs-on: codebuild-qComHweDemo-${{ github.run_id }}
+    runs-on: 
+      - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
+      
     steps:
       - uses: actions/checkout@v4
         with:
