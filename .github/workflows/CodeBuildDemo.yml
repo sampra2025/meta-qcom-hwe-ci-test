@@ -1,4 +1,4 @@
-name: AWSCodeBuild Demo
+name: QCOM-HWE-AWSDemo
 
 on:
   workflow_dispatch:
