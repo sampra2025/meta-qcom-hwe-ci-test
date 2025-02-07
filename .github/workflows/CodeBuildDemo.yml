@@ -8,6 +8,9 @@ jobs:
     runs-on:
       - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - run: | 
           echo "Hello World!"
           echo "First Build from GitHub action workflow By - Satish M."
