@@ -1,0 +1,67 @@
+name: Build Yocto AWS Demo
+
+on:
+  workflow_dispatch:
+
+env:
+  CACHE_DIR: /efs/gh-runners/quic-yocto
+  KAS_REPO_REF_DIR: /efs/gh-runners/quic-yocto/kas-mirrors
+  AWS_BUILD_HOST: codebuild-qComHweDemo-${{ github.run_id }}
+
+jobs:
+  kas-lock:
+    if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
+    runs-on: 
+      - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
+      
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run kas lock
+        run: |
+          kas dump --update --lock --inplace ci/base.yml
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kas-lock
+          path: ci/*.lock.yml
+
+  yocto-check-layer:
+    needs: kas-lock
+    if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
+    runs-on: 
+      - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: kas-lock
+          path: ci/
+
+      - name: Run yocto-check-layer
+        run: |
+          ci/yocto-check-layer.sh
+
+  yocto-patchreview:
+    needs: kas-lock
+    if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
+    runs-on: 
+      - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: kas-lock
+          path: ci/
+
+      - name: Run Yocto patchreview
+        run: |
+          ci/yocto-patchreview.sh
