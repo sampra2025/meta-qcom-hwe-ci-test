@@ -1,4 +1,4 @@
-name: Build Yocto AWS Demo - Part1
+name: Build Yocto AWS Demo - Part2
 
 on:
   workflow_dispatch:
