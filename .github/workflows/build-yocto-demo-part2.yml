@@ -11,7 +11,8 @@ env:
 jobs:
   kas-lock:
     if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
-    runs-on: $AWS_BUILD_HOST
+    runs-on: 
+      - codebuild-qComHweWithResFleet-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +31,8 @@ jobs:
   yocto-check-layer:
     needs: kas-lock
     if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
-    runs-on: $AWS_BUILD_HOST
+    runs-on:
+      - codebuild-qComHweWithResFleet-${{ github.run_id }}-${{ github.run_attempt }}
       
     steps:
       - uses: actions/checkout@v4
@@ -47,7 +49,8 @@ jobs:
   yocto-patchreview:
     needs: kas-lock
     if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
-    runs-on: $AWS_BUILD_HOST
+    runs-on:
+      - codebuild-qComHweWithResFleet-${{ github.run_id }}-${{ github.run_attempt }}
     
     steps:
       - uses: actions/checkout@v4
