@@ -43,6 +43,7 @@ jobs:
 
       - name: Run yocto-check-layer
         run: |
+          whoami ; id ; pwd
           ci/yocto-check-layer.sh
 
   yocto-patchreview:
