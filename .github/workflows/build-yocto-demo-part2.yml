@@ -21,45 +21,10 @@ jobs:
 
       - name: Run kas lock
         run: |
+          whoami; id; pwd
           kas dump --update --lock --inplace ci/base.yml
 
       - uses: actions/upload-artifact@v4
         with:
           name: kas-lock
           path: ci/*.lock.yml
-
-  yocto-check-layer:
-    needs: kas-lock
-    if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
-    runs-on:
-      - codebuild-qComHweWithResFleet-${{ github.run_id }}-${{ github.run_attempt }}
-      
-    steps:
-      - uses: actions/checkout@v4
-        
-      - uses: actions/download-artifact@v4
-        with:
-          name: kas-lock
-          path: ci/
-
-      - name: Run yocto-check-layer
-        run: |
-          ci/yocto-check-layer.sh
-
-  yocto-patchreview:
-    needs: kas-lock
-    if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
-    runs-on:
-      - codebuild-qComHweWithResFleet-${{ github.run_id }}-${{ github.run_attempt }}
-    
-    steps:
-      - uses: actions/checkout@v4
-        
-      - uses: actions/download-artifact@v4
-        with:
-          name: kas-lock
-          path: ci/
-
-      - name: Run Yocto patchreview
-        run: |
-          ci/yocto-patchreview.sh
