@@ -29,4 +29,42 @@ jobs:
           name: kas-lock
           path: ci/*.lock.yml
 
+  yocto-check-layer:
+    needs: kas-lock
+    if: github.repository == 'qualcomm-linux/meta-qcom-hwe'
+    runs-on: [self-hosted, x86]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: kas-lock
+          path: ci/
+
+      - name: Run yocto-check-layer
+        run: |
+          whoami; id
+          ci/yocto-check-layer.sh
+
+  yocto-patchreview:
+    needs: kas-lock
+    if: github.repository == 'qualcomm-linux/meta-qcom-hwe'
+    runs-on: [self-hosted, x86]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: kas-lock
+          path: ci/
+
+      - name: Run Yocto patchreview
+        run: |
+          whoami; id
+          ci/yocto-patchreview.sh
+
   
