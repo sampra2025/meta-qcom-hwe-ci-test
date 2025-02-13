@@ -31,8 +31,8 @@ jobs:
 
   yocto-check-layer:
     needs: kas-lock
-    if: github.repository == 'qualcomm-linux/meta-qcom-hwe'
-    runs-on: [self-hosted, x86]
+    if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
+    runs-on: awsdemo
     steps:
       - uses: actions/checkout@v4
         with:
@@ -50,8 +50,8 @@ jobs:
 
   yocto-patchreview:
     needs: kas-lock
-    if: github.repository == 'qualcomm-linux/meta-qcom-hwe'
-    runs-on: [self-hosted, x86]
+    if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
+    runs-on: awsdemo
     steps:
       - uses: actions/checkout@v4
         with:
