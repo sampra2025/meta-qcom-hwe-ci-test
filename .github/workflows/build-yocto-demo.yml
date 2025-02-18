@@ -11,8 +11,8 @@ env:
 jobs:
   kas-lock:
     if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
-    runs-on: 
-      - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: awsdemo
+      #- codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
       
     steps:
       - uses: actions/checkout@v4
@@ -31,8 +31,8 @@ jobs:
   yocto-check-layer:
     needs: kas-lock
     if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
-    runs-on: 
-      - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: awsdemo
+      #- codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -50,8 +50,8 @@ jobs:
   yocto-patchreview:
     needs: kas-lock
     if: github.repository == 'sampra2025/meta-qcom-hwe-ci-test'
-    runs-on: 
-      - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: awsdemo
+      #- codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -76,8 +76,8 @@ jobs:
           - qcm6490-idp
           - qcs6490-rb3gen2-core-kit
           - sa8775p-ride-sx
-    runs-on: 
-      - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: awsdemo
+      #- codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
     name: ${{ matrix.machine }}/poky/systemd
     steps:
       - uses: actions/checkout@v4
@@ -112,8 +112,8 @@ jobs:
     needs: compile
     outputs:
       url: ${{ steps.print-output.outputs.url }}
-    runs-on: 
-      - codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: awsdemo
+      #- codebuild-qComHweDemo-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - name: "Print output"
         id: print-output
