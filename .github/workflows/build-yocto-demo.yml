@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  CACHE_DIR: /efs/gh-runners/quic-yocto
-  KAS_REPO_REF_DIR: /efs/gh-runners/quic-yocto/kas-mirrors
+  CACHE_DIR: $GITHUB_WORKSPACE/gh-runners/quic-yocto
+  KAS_REPO_REF_DIR: $GITHUB_WORKSPACE/gh-runners/quic-yocto/kas-mirrors
   AWS_BUILD_HOST: codebuild-qComHweDemo-${{ github.run_id }}
 
 jobs:
