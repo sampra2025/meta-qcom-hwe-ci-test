@@ -5,8 +5,8 @@ on:
   pull_request:
 
 env:
-  CACHE_DIR: $GITHUB_WORKSPACE/gh-runners/quic-yocto
-  KAS_REPO_REF_DIR: $GITHUB_WORKSPACE/gh-runners/quic-yocto/kas-mirrors
+  CACHE_DIR: /srv/gh-runners/quic-yocto
+  KAS_REPO_REF_DIR: /srv/gh-runners/quic-yocto/kas-mirrors
   AWS_BUILD_HOST: codebuild-qComHweDemo-${{ github.run_id }}
 
 jobs:
@@ -22,7 +22,9 @@ jobs:
 
       - name: Run kas lock
         run: |
-          kas dump --update --lock --inplace ci/base.yml
+          mkdir -p ${CACHE_DIR}
+          chown -R builder ${CACHE_DIR} ./
+          sudo -u builder kas dump --update --lock --inplace ci/base.yml
 
       - uses: actions/upload-artifact@v4
         with:
@@ -46,8 +48,9 @@ jobs:
 
       - name: Run yocto-check-layer
         run: |
+          mkdir -p ${CACHE_DIR}
           chown -R builder ${CACHE_DIR} ./
-          sudo u builder ci/yocto-check-layer.sh
+          sudo -u builder ci/yocto-check-layer.sh
 
   yocto-patchreview:
     needs: kas-lock
@@ -95,8 +98,7 @@ jobs:
           whoami; id
           export DL_DIR=${CACHE_DIR}/downloads
           export SSTATE_DIR=${CACHE_DIR}/sstate-cache
-          export KAS_WORK_DIR=$PWD/../kas
-          mkdir $KAS_WORK_DIR
+          mkdir -p ${CACHE_DIR}
           chown -R builder ${CACHE_DIR} ./
           sudo -u builder kas build ci/mirror.yml:ci/${{ matrix.machine }}.yml
 
