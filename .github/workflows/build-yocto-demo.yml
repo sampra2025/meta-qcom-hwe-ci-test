@@ -1,12 +1,12 @@
-name: Build Yocto AWS Demo
+name: Build Yocto
 
 on:
   workflow_dispatch:
   pull_request:
 
 env:
-  CACHE_DIR: $GITHUB_WORKSPACE/gh-runners/quic-yocto
-  KAS_REPO_REF_DIR: $GITHUB_WORKSPACE/gh-runners/quic-yocto/kas-mirrors
+  CACHE_DIR: /efs/gh-runners/quic-yocto
+  KAS_REPO_REF_DIR: ${CACHE_DIR}/kas-mirrors
   AWS_BUILD_HOST: codebuild-qComHweDemo-${{ github.run_id }}
 
 jobs:
@@ -22,7 +22,9 @@ jobs:
 
       - name: Run kas lock
         run: |
-          kas dump --update --lock --inplace ci/base.yml
+          mkdir -p ${CACHE_DIR}
+          chown -R builder ${CACHE_DIR} ./
+          sudo -u builder kas dump --update --lock --inplace ci/base.yml
 
       - uses: actions/upload-artifact@v4
         with:
@@ -46,8 +48,9 @@ jobs:
 
       - name: Run yocto-check-layer
         run: |
+          mkdir -p ${CACHE_DIR}
           chown -R builder ${CACHE_DIR} ./
-          sudo u builder ci/yocto-check-layer.sh
+          sudo -u builder ci/yocto-check-layer.sh
 
   yocto-patchreview:
     needs: kas-lock
@@ -92,18 +95,16 @@ jobs:
 
       - name: Kas build
         run: |
-          whoami; id
           export DL_DIR=${CACHE_DIR}/downloads
           export SSTATE_DIR=${CACHE_DIR}/sstate-cache
           export KAS_WORK_DIR=$PWD/../kas
-          mkdir $KAS_WORK_DIR
-          chown -R builder ${CACHE_DIR} ./
-          sudo -u builder kas build ci/mirror.yml:ci/${{ matrix.machine }}.yml
+          mkdir -p $KAS_WORK_DIR ${CACHE_DIR}
+          chown -R builder ${CACHE_DIR} ${KAS_WORK_DIR} ./
+          sudo -E -u builder kas build ci/mirror.yml:ci/${{ matrix.machine }}.yml
 
       - name: Publish image
         run: |
           build_dir=${CACHE_DIR}/builds/${GITHUB_RUN_ID}
-          mkdir -p $build_dir
           img_dir=$build_dir/${{ matrix.machine }}
           [ -d $img_dir ] && rm -rf $img_dir
           mv ../kas/build/tmp/deploy/images/${{matrix.machine}} $img_dir
